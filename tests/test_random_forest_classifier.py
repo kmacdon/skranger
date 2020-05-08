@@ -2,7 +2,6 @@ from skranger import RandomForestClassifier
 
 
 class TestRandomForestClassifier:
-
     def test_init(self):
         _ = RandomForestClassifier()
 

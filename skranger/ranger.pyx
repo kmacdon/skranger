@@ -8,6 +8,7 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 
 cimport ranger_
+from ranger_ cimport Forest
 
 # Enums required as input for the ForestClassifier
 cpdef enum MemoryMode:
@@ -150,3 +151,77 @@ cdef class ForestClassification:
 
     def run(self, bool verbose, bool compute_oob_error):
         dereference(self.c_fc).run(verbose, compute_oob_error)
+
+
+cdef ranger_py(
+        unsigned int treetype,
+        np.ndarray input_x,
+        np.ndarray input_y,
+        vector[string] variable_names,
+        unsigned int mtry,
+        unsigned int num_trees,
+        bool verbose,
+        unsigned int seed,
+        unsigned int num_threads,
+        bool write_forest,
+        unsigned int importance_mode_r,
+        unsigned int min_node_size,
+        vector[vector[double]] split_select_weights,
+        bool use_split_select_weights,
+        vector[string] always_split_variable_names,
+        bool use_always_split_variable_names,
+        bool prediction_mode,
+        list loaded_forest,
+        np.ndarray snp_data,
+        bool sample_with_replacement,
+        bool probability,
+        vector[string] unordered_variable_names,
+        bool use_unordered_variable_names,
+        bool save_memory,
+        unsigned int splitrule_r,
+        vector[double] case_weights,
+        bool use_case_weights,
+        vector[double] class_weights,
+        bool predict_all,
+        bool keep_inbag,
+        vector[double] sample_fraction,
+        double alpha,
+        double minprop,
+        bool holdout,
+        unsigned int prediction_type_r,
+        unsigned int num_random_splits,
+               # Eigen::SparseMatrix<double>& sparse_x,
+        bool use_sparse_data,
+        bool order_snps,
+        bool oob_error,
+        unsigned int max_depth,
+        vector[vector[size_t]] inbag,
+        bool use_inbag,
+        vector[double] regularization_factor,
+        bool use_regularization_factor,
+        bool regularization_usedepth
+):
+    # This function is a python version of rangerCpp in the rangerCpp.cpp file
+
+    result = []
+
+    cdef Forest forest
+    cdef unique_ptr[ranger_.DataNumpy] data = unique_ptr[ranger_.DataNumpy]()
+
+    if not use_split_select_weights:
+        split_select_weights.clear()
+
+    if not use_always_split_variable_names:
+        always_split_variable_names.clear()
+
+    if not use_unordered_variable_names:
+        unordered_variable_names.clear()
+
+    if not use_case_weights:
+        case_weights.clear()
+
+    if not use_inbag:
+        inbag.clear()
+
+    if use_regularization_factor:
+        regularization_factor.clear()

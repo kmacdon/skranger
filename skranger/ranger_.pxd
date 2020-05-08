@@ -123,6 +123,7 @@ cdef extern from "../ranger/cpp_version/src/Forest/Forest.h" namespace "ranger":
             bool regularization_usedepth
         )
         void run(bool verbose, bool compute_oob_error)
+        void init_py()
 
 # Needed reference to be able to import in python
 cdef extern from "../ranger/cpp_version/src/utility/utility.cpp":
